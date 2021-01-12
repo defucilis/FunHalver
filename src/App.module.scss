@@ -1,7 +1,7 @@
 .header {
     background-color: #1b1b1b;
     height: 70px;
-    margin-bottom: 2em;
+    margin-bottom: 24px;
 
     > div {
         display: flex;
@@ -79,4 +79,10 @@
     h3, p {
         margin: 0;
     }
+}
+
+.preview {
+    position: absolute;
+    z-index: 10;
+    top: 94px;
 }
