@@ -1,17 +1,13 @@
 import React, {useState, useRef, useEffect, useCallback} from 'react'
 
-const FunscriptPreview = ({funscriptA, funscriptB, position, duration}) => {
+const FunscriptPreview = ({width, height, funscriptA, funscriptB, position, duration}) => {
     const canvasRef = useRef();
     const [ctx, setCtx] = useState(null);
-    const [width, setWidth] = useState(600);
-    const [height, setHeight] = useState(150);
 
     useEffect(() => {   
         if(!canvasRef.current) setCtx(null);
         else {
             setCtx(canvasRef.current.getContext("2d"));
-            setWidth(canvasRef.current.width);
-            setHeight(canvasRef.current.height);
         }
     }, [canvasRef])
 
@@ -51,7 +47,7 @@ const FunscriptPreview = ({funscriptA, funscriptB, position, duration}) => {
 
     return (
         <div>
-            <canvas width={600} height={150} ref={canvasRef}></canvas>
+            <canvas width={width} height={height} ref={canvasRef}></canvas>
         </div>
     )
 }

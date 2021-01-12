@@ -7,6 +7,10 @@ import renderHeatmap from './lib/FunscriptHeatmap'
 import FunscriptPreview from './components/FunscriptPreview'
 
 import style from './App.module.scss'
+import FunscriptHeatmap from './components/FunscriptHeatmap'
+
+
+const previewDuration = 20000;
 
 const App = () => {
 
@@ -16,7 +20,7 @@ const App = () => {
     const [previewTarget, setPreviewTarget] = useState({
         funscript: null,
         position: 0,
-        duration: 10000,
+        duration: previewDuration,
     });
 
     const currentCanvasRef = useRef();
@@ -98,51 +102,49 @@ const App = () => {
                     value={null}
                 />
                 <div className={style.preview} style={{zIndex: originalScript && previewTarget && previewTarget.funscriptA ? 100 : -1}}>
-                    <FunscriptPreview {...previewTarget}/>
+                    <FunscriptPreview width={1000} height={150} {...previewTarget}/>
                 </div>
 
                 {!originalScript ? null : (
                     <div className={style.scriptInfo}>
                         <h3>Original</h3>
                         <p>Duration: {getPrettyTimeString(originalScript.actions.slice(-1)[0].at)} - Action Count: {originalScript.actions.length}</p>
-                        <div>
-                            <canvas 
-                                width={600} 
-                                height={25} 
-                                ref={currentCanvasRef}
-                                onMouseEnter={() => {
-                                    setPreviewTarget({...previewTarget, funscriptA: originalScript, funscriptB: convertedScript});
-                                }}
-                                onMouseLeave={() => {
-                                    setPreviewTarget({...previewTarget, funscriptA: null, funscriptB: null});
-                                }}
-                                onMouseMove={e => {
-                                    setPreviewTarget({...previewTarget, position: (e.pageX - currentCanvasRef.current.offsetLeft - currentCanvasRef.current.scrollLeft + 1) / currentCanvasRef.current.width});
-                                }}>
-                            </canvas>
-                        </div>
+                        <FunscriptHeatmap 
+                            funscript={originalScript} 
+                            width={1000} 
+                            height={25} 
+                            hoverDisplayDuration={previewDuration}
+                            onMouseEnter={() => {
+                                setPreviewTarget({...previewTarget, funscriptA: originalScript, funscriptB: convertedScript});
+                            }}
+                            onMouseLeave={() => {
+                                setPreviewTarget({...previewTarget, funscriptA: null, funscriptB: null});
+                            }}
+                            onMouseMove={e => {
+                                setPreviewTarget({...previewTarget, position: e.localX});
+                            }}
+                        />
                     </div>
                 )}
                 {!convertedScript ? null : (
                     <div className={style.scriptInfo}>
                         <h3>Half-Speed</h3>
                         <p>Duration: {getPrettyTimeString(convertedScript.actions.slice(-1)[0].at)} - Action Count: {convertedScript.actions.length}</p>
-                        <div>
-                            <canvas 
-                                width={600} 
-                                height={25} 
-                                ref={newCanvasRef}
-                                onMouseEnter={() => {
-                                    setPreviewTarget({...previewTarget, funscriptA: originalScript, funscriptB: convertedScript});
-                                }}
-                                onMouseLeave={() => {
-                                    setPreviewTarget({...previewTarget, funscriptA: null, funscriptB: null});
-                                }}
-                                onMouseMove={e => {
-                                    setPreviewTarget({...previewTarget, position: (e.pageX - newCanvasRef.current.offsetLeft - newCanvasRef.current.scrollLeft + 1) / newCanvasRef.current.width});
-                                }}>
-                            </canvas>
-                        </div>
+                        <FunscriptHeatmap 
+                            funscript={convertedScript} 
+                            width={1000} 
+                            height={25} 
+                            hoverDisplayDuration={previewDuration}
+                            onMouseEnter={() => {
+                                setPreviewTarget({...previewTarget, funscriptA: originalScript, funscriptB: convertedScript});
+                            }}
+                            onMouseLeave={() => {
+                                setPreviewTarget({...previewTarget, funscriptA: null, funscriptB: null});
+                            }}
+                            onMouseMove={e => {
+                                setPreviewTarget({...previewTarget, position: e.localX});
+                            }}
+                        />
                         {!preparedFile ? null : (
                             <div className={style.downloadLink}>
                                 <a 
