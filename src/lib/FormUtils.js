@@ -1,4 +1,4 @@
-import {useRef, useState, useEffect} from 'react'
+import {useRef, useState, useEffect, useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 
 import Tagify from "@yaireo/tagify"
@@ -20,16 +20,16 @@ const Input = props => {
 const TextArea = props => {
     const textArea = useRef();
 
-    useEffect(() => {
-        textArea.current.style.setProperty("height", getNewHeight(textArea.current.scrollHeight));
-    }, [textArea, props.value])
-
-    const getNewHeight = scrollHeight => {
+    const getNewHeight = useCallback(scrollHeight => {
         if(!props.minheight && !props.maxheight) return (scrollHeight + 2) + "px";
         if(!props.minheight) return Math.min(props.maxheight, (scrollHeight + 2)) + "px";
         if(!props.maxheight) return Math.max(props.minheight, (scrollHeight + 2)) + "px";
         return Math.min(props.maxheight, Math.max(props.minheight, scrollHeight + 2)) + "px";
-    }
+    }, [props.maxheight, props.minheight]);
+
+    useEffect(() => {
+        textArea.current.style.setProperty("height", getNewHeight(textArea.current.scrollHeight));
+    }, [textArea, props.value, getNewHeight])
 
     return (
         <div>
@@ -100,7 +100,7 @@ const Tags = props => {
     const [value, setValue] = useState([]);
     useEffect(() => {
         setValue(props.value);
-    }, [])
+    }, [props.value])
 
     const sendChange = val => {
         props.onChange({
@@ -148,8 +148,31 @@ const InnerDropzone = ({fieldName, className, hoveringClassName, instruction, op
     const prettifySize = size => {
         return `${(size / (size > 1000000 ? 1000000 : 1000)).toFixed(1)} ${size > 1000000 ? "MB" : "kB"}`;
     }
+    
 
-    const validateFile = file => {
+    const [fileLabels, setFileLabels] = useState([]);
+    const [over, setOver] = useState(false);
+    const handleFiles = useCallback(newFiles => {
+        console.log(newFiles);
+        setOver(false);
+        setFiles(newFiles);
+        setFileLabels(newFiles.map(file => {
+            return <li key={`${fieldName}_${file.name}`}>
+                {`${file.name} (${prettifySize(file.size)})`}
+            </li>
+        }))
+        onChange(newFiles);
+    }, [fieldName, onChange]);
+    
+
+    const handleErrors = useCallback(rejections => {
+        console.log(rejections);
+        setOver(false);
+        handleFiles([]);
+        onError(rejections[0].errors[0].message);
+    }, [handleFiles, onError]);
+
+    const validateFile = useCallback(file => {
         let error = "";
         if(options.accept && options.accept.findIndex(type => file.type === type) === -1) {
             error = "File must be png or jpg";
@@ -162,40 +185,21 @@ const InnerDropzone = ({fieldName, className, hoveringClassName, instruction, op
             return false;
         }
         return true;
-    }
+    }, [handleErrors, options.accept, options.maxSize]);
 
-    const handlePasteEvent = e => {
-        if(e.clipboardData == false || !e.clipboardData || !e.clipboardData.items) return;
-        if(!e.clipboardData.files || e.clipboardData.files.length == 0) return;
+    const handlePasteEvent = useCallback(e => {
+        if(!e.clipboardData || !e.clipboardData.items) return;
+        if(!e.clipboardData.files || e.clipboardData.files.length === 0) return;
         if(!validateFile(e.clipboardData.files[0])) return;
         handleFiles([e.clipboardData.files[0]]);
-    }
+    }, [handleFiles, validateFile]);
 
     useEffect(() => {
         if(!options.pasteable) return () => window.removeEventListener("paste", handlePasteEvent);
         window.addEventListener("paste", handlePasteEvent);
         return () => window.removeEventListener("paste", handlePasteEvent);
-    }, [options.pasteable])
+    }, [options.pasteable, handlePasteEvent])
 
-    const [fileLabels, setFileLabels] = useState([]);
-    const [over, setOver] = useState(false);
-    const handleFiles = newFiles => {
-        console.log(newFiles);
-        setOver(false);
-        setFiles(newFiles);
-        setFileLabels(newFiles.map(file => {
-            return <li key={`${fieldName}_${file.name}`}>
-                {`${file.name} (${prettifySize(file.size)})`}
-            </li>
-        }))
-        onChange(newFiles);
-    }
-    const handleErrors = rejections => {
-        console.log(rejections);
-        setOver(false);
-        handleFiles([]);
-        onError(rejections[0].errors[0].message);
-    }
     const {getRootProps, getInputProps} = useDropzone({
         ...options,
         onDropAccepted: handleFiles,
