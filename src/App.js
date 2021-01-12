@@ -9,18 +9,15 @@ import FunscriptPreview from './components/FunscriptPreview'
 import style from './App.module.scss'
 import FunscriptHeatmap from './components/FunscriptHeatmap'
 
-
-const previewDuration = 20000;
-
 const App = () => {
 
     const [originalScript, setOriginalScript] = useState(null);
     const [convertedScript, setConvertedScript] = useState(null);
     const [preparedFile, setPreparedFile] = useState(null);
+    const [previewDuration, setPreviewDuration] = useState(10000);
     const [previewTarget, setPreviewTarget] = useState({
         funscript: null,
         position: 0,
-        duration: previewDuration,
     });
 
     const currentCanvasRef = useRef();
@@ -102,7 +99,7 @@ const App = () => {
                     value={null}
                 />
                 <div className={style.preview} style={{zIndex: originalScript && previewTarget && previewTarget.funscriptA ? 100 : -1}}>
-                    <FunscriptPreview width={1000} height={150} {...previewTarget}/>
+                    <FunscriptPreview width={1000} height={150} {...previewTarget} duration={previewDuration}/>
                 </div>
 
                 {!originalScript ? null : (
@@ -122,6 +119,9 @@ const App = () => {
                             }}
                             onMouseMove={e => {
                                 setPreviewTarget({...previewTarget, position: e.localX});
+                            }}
+                            onWheel={e => {
+                                setPreviewDuration(cur => e.deltaY < 0 ? cur / 1.5 : cur * 1.5);
                             }}
                         />
                     </div>
@@ -143,6 +143,9 @@ const App = () => {
                             }}
                             onMouseMove={e => {
                                 setPreviewTarget({...previewTarget, position: e.localX});
+                            }}
+                            onWheel={e => {
+                                setPreviewDuration(cur => e.deltaY < 0 ? cur / 1.5 : cur * 1.5);
                             }}
                         />
                         {!preparedFile ? null : (

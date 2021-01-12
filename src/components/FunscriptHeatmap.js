@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react'
 
 import renderHeatmap from '../lib/FunscriptHeatmap'
 
-const FunscriptHeatmap = ({funscript, width, height, hoverDisplayDuration, onMouseEnter, onMouseLeave, onMouseMove}) => {
+const FunscriptHeatmap = ({funscript, width, height, hoverDisplayDuration, onMouseEnter, onMouseLeave, onMouseMove, onWheel}) => {
 
     const parentRef = useRef();
     const canvasRef = useRef();
@@ -56,6 +56,9 @@ const FunscriptHeatmap = ({funscript, width, height, hoverDisplayDuration, onMou
                     const localY = (e.pageY - parentRef.current.offsetTop - parentRef.current.scrollTop + 1) / canvasRef.current.height;
                     onMouseMove({ ...e, localX, localY, });
                     setLocalMousePos({x: localX, y: localY});
+                }}
+                onWheel={e => {
+                    onWheel(e);
                 }}>
             </canvas>
             <div ref={overlayRef} style={{
