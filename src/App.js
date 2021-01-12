@@ -51,6 +51,7 @@ const App = () => {
         if(currentCanvasRef.current) {
             renderHeatmap(currentCanvasRef.current, originalScript);
         }
+        setPreviewDuration(10000);
     }, [originalScript]);
 
     useEffect(() => {
@@ -121,7 +122,10 @@ const App = () => {
                                 setPreviewTarget({...previewTarget, position: e.localX});
                             }}
                             onWheel={e => {
-                                setPreviewDuration(cur => e.deltaY < 0 ? cur / 1.5 : cur * 1.5);
+                                setPreviewDuration(cur => {
+                                    const scriptDuration = originalScript.actions.slice(-1)[0].at;
+                                    return Math.min(scriptDuration, e.deltaY < 0 ? cur / 1.5 : cur * 1.5);
+                                });
                             }}
                         />
                     </div>
@@ -145,7 +149,10 @@ const App = () => {
                                 setPreviewTarget({...previewTarget, position: e.localX});
                             }}
                             onWheel={e => {
-                                setPreviewDuration(cur => e.deltaY < 0 ? cur / 1.5 : cur * 1.5);
+                                setPreviewDuration(cur => {
+                                    const scriptDuration = originalScript.actions.slice(-1)[0].at;
+                                    return Math.min(scriptDuration, e.deltaY < 0 ? cur / 1.5 : cur * 1.5);
+                                });
                             }}
                         />
                         {!preparedFile ? null : (

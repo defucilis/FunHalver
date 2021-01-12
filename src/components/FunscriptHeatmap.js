@@ -8,6 +8,7 @@ const FunscriptHeatmap = ({funscript, width, height, hoverDisplayDuration, onMou
     const canvasRef = useRef();
     const overlayRef = useRef();
     const [localMousePos, setLocalMousePos] = useState(null);
+    const [funscriptDuration, setFunscriptDuration] = useState(1);
 
     useEffect(() => {
         if(canvasRef.current) {
@@ -17,6 +18,7 @@ const FunscriptHeatmap = ({funscript, width, height, hoverDisplayDuration, onMou
                 canvasRef.current.getContext("2d").clearRect(0, 0, width, height);
             }
         }
+        setFunscriptDuration(funscript ? funscript.actions.slice(-1)[0].at : 1);
     }, [funscript, height, width])
 
     useEffect(() => {
@@ -29,7 +31,21 @@ const FunscriptHeatmap = ({funscript, width, height, hoverDisplayDuration, onMou
         const min = Math.max(0, localMousePos.x * width - durationAsWidth * 0.5);
         overlayRef.current.style.setProperty("left", min + "px");
         overlayRef.current.style.setProperty("width", durationAsWidth + "px");
-    }, [funscript.actions, hoverDisplayDuration, localMousePos, width])
+    }, [funscript.actions, hoverDisplayDuration, localMousePos, width]);
+
+    useEffect(() => {
+        if(!localMousePos) return;
+        let localX = localMousePos.x;
+        if(localX * funscriptDuration.at - hoverDisplayDuration * 0.5 < 0) {
+            localX = (hoverDisplayDuration * 0.5) / funscriptDuration;
+            setLocalMousePos({...localMousePos, x: localX});
+            onMouseMove({...localMousePos, localX});
+        } else if(localX * funscriptDuration + hoverDisplayDuration * 0.5 > funscriptDuration) {
+            localX = (funscriptDuration - hoverDisplayDuration * 0.5) / funscriptDuration;
+            setLocalMousePos({...localMousePos, x: localX});
+            onMouseMove({...localMousePos, localX});
+        }
+    }, [funscriptDuration, localMousePos, hoverDisplayDuration, onMouseMove])
 
     return (
         <div
@@ -52,7 +68,7 @@ const FunscriptHeatmap = ({funscript, width, height, hoverDisplayDuration, onMou
                     setLocalMousePos(null);
                 }}
                 onMouseMove={e => {
-                    const localX = (e.pageX - parentRef.current.offsetLeft - parentRef.current.scrollLeft + 1) / canvasRef.current.width;
+                    let localX = (e.pageX - parentRef.current.offsetLeft - parentRef.current.scrollLeft + 1) / canvasRef.current.width;
                     const localY = (e.pageY - parentRef.current.offsetTop - parentRef.current.scrollTop + 1) / canvasRef.current.height;
                     onMouseMove({ ...e, localX, localY, });
                     setLocalMousePos({x: localX, y: localY});
