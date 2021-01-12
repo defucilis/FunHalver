@@ -1,0 +1,82 @@
+.header {
+    background-color: #1b1b1b;
+    height: 70px;
+    margin-bottom: 2em;
+
+    > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    padding-top: 15px;
+
+    h1 {
+        font-size: 1.5rem;
+
+        span {
+            color: #e8739c;
+        }
+    }
+}
+
+.container {
+    width: 600px;
+    margin: 0 auto;
+}
+
+.dropzone {
+    width: 100%;
+    height: 150px;
+    border: 2px dashed skyblue;
+    display: grid;
+    place-items: center;
+    transition: all 0.3s;
+    background-color: rgba(255,255,255,0);
+    border-radius: 0px;
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-size: 1.5em;
+    }
+}
+
+.dropzoneon {
+    border-color: #e8739c;
+    background-color: rgba(232, 165, 216, 0.1);
+    border-radius: 50%;
+}
+
+.downloadLink {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+
+    a {
+        display: block;
+        background-color: #e8739c;
+        padding: 0.25em 0.5em;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #000;
+        font-size: 1.2em;
+        font-weight: 500;
+        border: 1px solid rgba(255,255,255,0);
+        transition: border 0.3s;
+
+        &:hover {
+            border-color: #fff;
+        }
+    }
+}
+
+.scriptInfo {
+
+    margin-top: 1em;
+
+    h3, p {
+        margin: 0;
+    }
+}

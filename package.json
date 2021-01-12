@@ -1,21 +1,31 @@
 {
   "name": "funreducerapp",
   "version": "0.1.0",
+  "main": "public/electron.js",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.8",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.6.0",
+    "@yaireo/tagify": "^3.22.0",
+    "electron-is-dev": "^1.2.0",
     "react": "^17.0.1",
+    "react-collapse": "^5.1.0",
+    "react-datepicker": "^3.3.0",
     "react-dom": "^17.0.1",
+    "react-dropzone": "^11.2.4",
+    "react-icons": "^4.1.0",
     "react-scripts": "4.0.1",
+    "sass": "^1.32.2",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "concurrently -k \"npm start\" \"npm:electron\"",
+    "electron": "wait-on tcp:3000 && electron ."
   },
   "eslintConfig": {
     "extends": [
@@ -34,5 +44,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "electron": "^9.1.1",
+    "wait-on": "^5.2.1"
   }
 }
