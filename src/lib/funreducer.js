@@ -31,7 +31,7 @@ const getHalfSpeedGroup = actionGroup => {
     //Select 'apex' actions where the direction changes, and action pairs that represent a pause
     const keyActions = [];
     let apexCount = 0;
-    actionGroup.filter((action, i) => {
+    const filteredGroup = actionGroup.filter((action, i) => {
         if(i === 0) return true;
         if(i === actionGroup.length - 1) return true;
 
@@ -39,20 +39,21 @@ const getHalfSpeedGroup = actionGroup => {
         const lastAction = actionGroup[i - 1];
         const nextAction = actionGroup[i + 1];
         return !(action.pos === lastAction.pos && action.pos === nextAction.pos);
-    }).forEach((action, i) => {
+    });
+    filteredGroup.forEach((action, i) => {
         //The first and last points in a group are always added
         if(i === 0) {
             keyActions.push({...action, subActions: [], type: "first"});
             return;
         }
-        if(i === actionGroup.length - 1) {
+        if(i === filteredGroup.length - 1) {
             //note - should this be a key action? Hard to know right now, need to test
             keyActions.push({...action, subActions: [], type: "last"});
             return;
         }
 
-        const lastAction = actionGroup[i - 1];
-        const nextAction = actionGroup[i + 1];
+        const lastAction = filteredGroup[i - 1];
+        const nextAction = filteredGroup[i + 1];
 
         //Add the actions on either side of a pause
         if((action.pos - lastAction.pos) === 0) {
@@ -102,7 +103,6 @@ const getHalfSpeedGroup = actionGroup => {
             pos = newPos;
         }
     });
-    
     return finalActions;
 }
 
