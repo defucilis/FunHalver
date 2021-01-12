@@ -79,7 +79,10 @@ const App = () => {
         <div className="App">
             <div className={style.header}>
                 <div className={style.container}>
-                    <h1>Fun<span>Halver</span></h1>
+                    <div>
+                        <h1>Fun<span>Halver</span></h1>
+                        <p>v0.1.0</p>
+                    </div>
                     <p>Create a half-speed version of any .funscript</p>
                 </div>
             </div>
