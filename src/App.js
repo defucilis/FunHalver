@@ -3,6 +3,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import {Dropzone} from './lib/FormUtils'
 import convertFunscript from './lib/funreducer'
 import renderHeatmap from './lib/FunscriptHeatmap'
+import {getAverageIntensity} from './lib/FunscriptHeatmap'
 
 import FunscriptPreview from './components/FunscriptPreview'
 import Checkbox from './lib/Checkbox'
@@ -13,8 +14,10 @@ import FunscriptHeatmap from './components/FunscriptHeatmap'
 const App = () => {
 
     const [originalScript, setOriginalScript] = useState(null);
+    const [originalScriptMetadata, setOriginalScriptMetadata] = useState({});
     const [filename, setFilename] = useState("");
     const [convertedScript, setConvertedScript] = useState(null);
+    const [convertedScriptMetadata, setConvertedScriptMetadata] = useState({});
     const [preparedFile, setPreparedFile] = useState(null);
     const [options, setOptions] = useState({
         resetAfterPause: true,
@@ -49,6 +52,8 @@ const App = () => {
     useEffect(() => {
         if(!originalScript) {
             setConvertedScript(null);
+            setOriginalScriptMetadata({});
+            setConvertedScriptMetadata({});
             return;
         }
         const newConvertedScript = convertFunscript(originalScript, options, message => console.log(message));
@@ -64,6 +69,11 @@ const App = () => {
         if(currentCanvasRef.current) {
             renderHeatmap(currentCanvasRef.current, originalScript);
         }
+        setOriginalScriptMetadata(!originalScript ? {} : {
+            duration: originalScript.actions.slice(-1)[0].at,
+            actionCount: originalScript.actions.length,
+            averageIntensity: Math.round(getAverageIntensity(originalScript))
+        });
         setPreviewDuration(10000);
     }, [originalScript]);
 
@@ -71,6 +81,11 @@ const App = () => {
         if(newCanvasRef.current) {
             renderHeatmap(newCanvasRef.current, convertedScript);
         }
+        setConvertedScriptMetadata(!convertedScript ? {} : {
+            duration: convertedScript.actions.slice(-1)[0].at,
+            actionCount: convertedScript.actions.length,
+            averageIntensity: Math.round(getAverageIntensity(convertedScript))
+        });
     }, [convertedScript]);
 
     const addMessage = message => {
@@ -122,7 +137,11 @@ const App = () => {
                 {!originalScript ? null : (
                     <div className={style.scriptInfo}>
                         <h3>Original</h3>
-                        <p>Duration: {getPrettyTimeString(originalScript.actions.slice(-1)[0].at)} - Action Count: {originalScript.actions.length}</p>
+                        <p>
+                            {`Duration: ${getPrettyTimeString(originalScriptMetadata.duration)}`}
+                            {` -- Intensity: ${originalScriptMetadata.averageIntensity}`}
+                            {/*` - Action Count: ${originalScriptMetadata.actionCount}`*/}
+                        </p>
                         <FunscriptHeatmap 
                             funscript={originalScript} 
                             width={1000} 
@@ -170,7 +189,11 @@ const App = () => {
                 {!convertedScript ? null : (
                     <div className={style.scriptInfo}>
                         <h3>Half-Speed</h3>
-                        <p>Duration: {getPrettyTimeString(convertedScript.actions.slice(-1)[0].at)} - Action Count: {convertedScript.actions.length}</p>
+                        <p>
+                            {`Duration: ${getPrettyTimeString(convertedScriptMetadata.duration)}`}
+                            {` -- Intensity: ${convertedScriptMetadata.averageIntensity}`}
+                            {/*` - Action Count: ${convertedScriptMetadata.actionCount}`*/}
+                        </p>
                         <FunscriptHeatmap 
                             funscript={convertedScript} 
                             width={1000} 

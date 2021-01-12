@@ -24,12 +24,15 @@ const getAverageColor = colors => {
     return [colorSum[0] / colors.length, colorSum[1] / colors.length, colorSum[2] / colors.length];   
 }
 
+const getIntensity = (a1, a2) => {
+    const slope = Math.min(20, 500.0 / (a2.at - a1.at));
+    return slope * Math.abs(a2.pos - a1.pos);
+}
+
 //function adapted from Lucife
 const getColor = (a1, a2) => {
     const stepSize = 60;
-    const slope = Math.min(20, 500.0 / (a2.at - a1.at));
-    let intensity = slope * Math.abs(a2.pos - a1.pos);
-
+    let intensity = getIntensity(a1, a2);
     if(intensity <= 0) return heatmapColors[0];
     if(intensity > 4 * stepSize) return heatmapColors[6];
     intensity += stepSize / 2.0;
@@ -43,6 +46,16 @@ const getColor = (a1, a2) => {
         console.error("Failed on actions", a1, a2, error);
     }
 }
+
+const getAverageIntensity = script => {
+    let intensitySum = 0;
+    for(let i = 1; i < script.actions.length; i++) {
+        intensitySum += getIntensity(script.actions[i-1], script.actions[i]);
+    }
+    return intensitySum / (script.actions.length - 1);
+}
+
+export {getAverageIntensity};
 
 const renderHeatmap = (canvas, script) => {
     const width = canvas.width;
