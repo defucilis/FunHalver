@@ -54,7 +54,6 @@ const FunscriptHeatmap = ({funscript, width, height, hoverDisplayDuration, onMou
                 onMouseMove={e => {
                     const localX = (e.pageX - parentRef.current.offsetLeft - parentRef.current.scrollLeft + 1) / canvasRef.current.width;
                     const localY = (e.pageY - parentRef.current.offsetTop - parentRef.current.scrollTop + 1) / canvasRef.current.height;
-                    console.log(e.pageX, parentRef.current.offsetLeft, parentRef.current.scrollLeft);
                     onMouseMove({ ...e, localX, localY, });
                     setLocalMousePos({x: localX, y: localY});
                 }}>

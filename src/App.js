@@ -43,7 +43,7 @@ const App = () => {
             const newConvertedScript = convertFunscript(newOriginalScript, {}, message => console.log(message));
             setConvertedScript(newConvertedScript);
             setPreparedFile({
-                url: window.URL.createObjectURL(new Blob([JSON.stringify(convertedScript)])),
+                url: window.URL.createObjectURL(new Blob([JSON.stringify(newConvertedScript)])),
                 filename: newFileName,
             });
         }
