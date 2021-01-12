@@ -1,70 +1,28 @@
-# Getting Started with Create React App
+Hello everyone, my name is Defucilis and I am not a cock hero. If you're anything like me, there are a whole bunch of scripts for videos that you'd love to watch but there's just no way that you're able to last through the whole video. You can always reduce the stroke length, but where's the fun in that?
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+I wrote this utility application that can make any script twice as easy, without sacrificing perfect synchronization...sort of. It turns each up/down stroke into a single up and/or down stroke.
 
-## Available Scripts
+Just drag any .funscript file into the app and instantly have a half-speed .funscript that you can save wherever you like!
 
-In the project directory, you can run:
+Features:
 
-### `npm start`
+  * Works on any funscript
+  * Maintains stroke timing
+  * Maintains stroke positions (generally)
+  * Respects pauses
+  * Heatmap preview (thanks @Lucifie!)
+  * Funscript shape preview - pink is the half-speed script, white is the original script
+  * No internet connection required
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Planned Features:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+  * User-configurable options to fine-tune
+  * Respect speed modulations for intermediate funscript actions
+  * Mac + Linux support...maybe
 
-### `npm test`
+Ideal For:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+  * Running scripts designed for Handy / OSR2 on Launch
+  * Last through hard-mode Cock Hero videos
+  * Last through long VR scripts
+  *  Last through any script which is too hard for you right now!
