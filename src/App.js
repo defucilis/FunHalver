@@ -109,7 +109,7 @@ const App = () => {
                 <div className={style.container}>
                     <div>
                         <h1>Fun<span>Halver</span></h1>
-                        <p>v0.1.0</p>
+                        <p>v0.2.0</p>
                     </div>
                     <p>Create a half-speed version of any .funscript</p>
                 </div>
