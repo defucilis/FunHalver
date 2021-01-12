@@ -40,7 +40,6 @@ const TextArea = props => {
                 style={{resize:"none"}}
                 onInput={() => {
                     textArea.current.style.setProperty("height", getNewHeight(textArea.current.scrollHeight));
-                    console.log(textArea.current.style);
                 }}
             >
             </textarea>
@@ -153,7 +152,6 @@ const InnerDropzone = ({fieldName, className, hoveringClassName, instruction, op
     const [fileLabels, setFileLabels] = useState([]);
     const [over, setOver] = useState(false);
     const handleFiles = useCallback(newFiles => {
-        console.log(newFiles);
         setOver(false);
         setFiles(newFiles);
         setFileLabels(newFiles.map(file => {
@@ -166,7 +164,7 @@ const InnerDropzone = ({fieldName, className, hoveringClassName, instruction, op
     
 
     const handleErrors = useCallback(rejections => {
-        console.log(rejections);
+        console.error(rejections);
         setOver(false);
         handleFiles([]);
         onError(rejections[0].errors[0].message);

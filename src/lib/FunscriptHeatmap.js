@@ -33,11 +33,15 @@ const getColor = (a1, a2) => {
     if(intensity <= 0) return heatmapColors[0];
     if(intensity > 4 * stepSize) return heatmapColors[6];
     intensity += stepSize / 2.0;
-    return getLerpedColor(
-        heatmapColors[Math.floor(intensity / stepSize)],
-        heatmapColors[1 + Math.floor(intensity / stepSize)],
-        Math.min(1.0, Math.max(0.0, (intensity - Math.floor(intensity / stepSize)) / stepSize))
-    );
+    try {
+        return getLerpedColor(
+            heatmapColors[Math.floor(intensity / stepSize)],
+            heatmapColors[1 + Math.floor(intensity / stepSize)],
+            Math.min(1.0, Math.max(0.0, (intensity - Math.floor(intensity / stepSize)) / stepSize))
+        );
+    } catch(error) {
+        console.error("Failed on actions", a1, a2, error);
+    }
 }
 
 const renderHeatmap = (canvas, script) => {
