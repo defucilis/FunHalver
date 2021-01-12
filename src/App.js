@@ -20,7 +20,7 @@ const App = () => {
     const [convertedScriptMetadata, setConvertedScriptMetadata] = useState({});
     const [preparedFile, setPreparedFile] = useState(null);
     const [options, setOptions] = useState({
-        resetAfterPause: true,
+        resetAfterPause: false,
         removeShortPauses: false,
     })
     const [previewDuration, setPreviewDuration] = useState(10000);
