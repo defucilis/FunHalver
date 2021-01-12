@@ -20,7 +20,11 @@ const FunscriptPreview = ({width, height, funscriptA, funscriptB, position, dura
         ctx.beginPath();
         let first = true;
         funscript.actions
-            .filter(a => a.at > min && a.at < max)
+            .filter((a, i) => {
+                const prev = i === 0 ? a : funscript.actions[i-1];
+                const next = i === funscript.actions.length - 1 ? a : funscript.actions[i+1];
+                return next.at > min && prev.at < max;
+            })
             .forEach(action => {
                 const x = width * (action.at - min) / duration + (opt.offset ? opt.offset.x : 0);
                 const y = height - (action.pos / 100) * height + (opt.offset ? opt.offset.y : 0);
