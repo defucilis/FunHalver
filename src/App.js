@@ -5,6 +5,7 @@ import convertFunscript from './lib/funreducer'
 import renderHeatmap from './lib/FunscriptHeatmap'
 
 import FunscriptPreview from './components/FunscriptPreview'
+import Checkbox from './lib/Checkbox'
 
 import style from './App.module.scss'
 import FunscriptHeatmap from './components/FunscriptHeatmap'
@@ -12,8 +13,13 @@ import FunscriptHeatmap from './components/FunscriptHeatmap'
 const App = () => {
 
     const [originalScript, setOriginalScript] = useState(null);
+    const [filename, setFilename] = useState("");
     const [convertedScript, setConvertedScript] = useState(null);
     const [preparedFile, setPreparedFile] = useState(null);
+    const [options, setOptions] = useState({
+        resetAfterPause: true,
+        removeShortPauses: false,
+    })
     const [previewDuration, setPreviewDuration] = useState(10000);
     const [previewTarget, setPreviewTarget] = useState({
         funscript: null,
@@ -30,22 +36,29 @@ const App = () => {
             return;
         }
 
-        const newFileName = e.target.value[0].name.replace(".funscript", "_HALVED.funscript");
+        setFilename(e.target.value[0].name);
 
         const reader = new FileReader();
         reader.onloadend = e => {
             const newOriginalScript = JSON.parse(e.target.result);
             setOriginalScript(newOriginalScript);
-            
-            const newConvertedScript = convertFunscript(newOriginalScript, {}, message => console.log(message));
-            setConvertedScript(newConvertedScript);
-            setPreparedFile({
-                url: window.URL.createObjectURL(new Blob([JSON.stringify(newConvertedScript)])),
-                filename: newFileName,
-            });
         }
         reader.readAsText(e.target.value[0])
     }
+
+    useEffect(() => {
+        if(!originalScript) {
+            setConvertedScript(null);
+            return;
+        }
+        const newConvertedScript = convertFunscript(originalScript, options, message => console.log(message));
+        const newFilename = filename.replace(".funscript", "_HALVED.funscript");
+        setConvertedScript(newConvertedScript);
+        setPreparedFile({
+            url: window.URL.createObjectURL(new Blob([JSON.stringify(newConvertedScript)])),
+            filename: newFilename,
+        });
+    }, [originalScript, filename, options])
 
     useEffect(() => {
         if(currentCanvasRef.current) {
@@ -133,6 +146,27 @@ const App = () => {
                         />
                     </div>
                 )}
+
+                {!originalScript ? null : (
+                    <div className={style.options}>
+                        <h3>Options</h3>
+                        <div>
+                            <div>
+                                <label htmlFor="resetAfterPause">Reset After Pause</label>
+                                <Checkbox className={style.checkbox} checked={options.resetAfterPause} onChange={e => setOptions({...options, resetAfterPause: e.target.checked})}>
+                                    <p>✔</p>
+                                </Checkbox>
+                            </div>
+                            <div>
+                                <label htmlFor="removeShortPauses">Remove Short Pauses</label>
+                                <Checkbox className={style.checkbox} checked={options.removeShortPauses} onChange={e => setOptions({...options, removeShortPauses: e.target.checked})}>
+                                    <p>✔</p>
+                                </Checkbox>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {!convertedScript ? null : (
                     <div className={style.scriptInfo}>
                         <h3>Half-Speed</h3>

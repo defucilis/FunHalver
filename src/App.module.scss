@@ -95,3 +95,42 @@
     z-index: 10;
     top: 94px;
 }
+
+label {
+    color: white;
+}
+
+.options {
+    margin: 1em 0;
+    h3 {
+        margin: 0;
+    }
+
+    > div {
+        display: flex;
+        justify-content: flex-start;
+
+        > div {
+            margin-right: 1em;
+        }
+    }
+}
+
+.checkbox {
+    width: 40px;
+    height: 40px;
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: #202020;
+    display: grid;
+    place-items: center;
+    position: relative;
+
+    p {
+        font-size: 2em;
+        color: #FFF;
+        margin: 0;
+        position: relative;
+        top: -5px;
+    }
+}

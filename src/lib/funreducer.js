@@ -27,11 +27,11 @@ const getActionGroups = actions => {
     return actionGroups;
 }
 
-const getHalfSpeedGroup = actionGroup => {
+const getHalfSpeedGroup = (actionGroup, options) => {
     //Select 'apex' actions where the direction changes, and action pairs that represent a pause
     const keyActions = [];
     let apexCount = 0;
-    const filteredGroup = actionGroup.filter((action, i) => {
+    let filteredGroup = actionGroup.filter((action, i) => {
         if(i === 0) return true;
         if(i === actionGroup.length - 1) return true;
 
@@ -40,6 +40,30 @@ const getHalfSpeedGroup = actionGroup => {
         const nextAction = actionGroup[i + 1];
         return !(action.pos === lastAction.pos && action.pos === nextAction.pos);
     });
+    if(options.removeShortPauses) {
+        const newFilteredGroup = [];
+        const pauseTime = options.shortPauseDuration && options.shortPauseDuration > 0 
+            ? options.shortPauseDuration 
+            : 2000;
+        filteredGroup.forEach((action, i) => {
+            if(i === 0 || i === filteredGroup.length - 1) {
+                newFilteredGroup.push(action);
+                return;
+            }
+            const lastAction = actionGroup[i - 1];
+            const nextAction = actionGroup[i + 1];
+
+            //if the gap between to equal positions is less than 0.5 seconds (configurable?)
+            if(action.pos === lastAction.pos && Math.abs(action.at - lastAction.at) < pauseTime) {
+                newFilteredGroup.push({at: (action.at + lastAction.at) * 0.5, pos: action.pos});
+            } else if(action.pos === nextAction.pos && Math.abs(action.at - nextAction.at) < pauseTime) {
+                //do nothing - we're going to combine them at the next action so we don't add it!
+            } else {
+                newFilteredGroup.push(action);
+            }
+        });
+        filteredGroup = newFilteredGroup;
+    }
     filteredGroup.forEach((action, i) => {
         //The first and last points in a group are always added
         if(i === 0) {
@@ -83,7 +107,7 @@ const getHalfSpeedGroup = actionGroup => {
         keyActions.slice(-1)[0].subActions.push(action);
     });
 
-    let pos = 100;
+    let pos = options.resetAfterPause ? 100 : keyActions[0].pos;
     const finalActions = [];
     keyActions.forEach((action, i) => {
         if(i === 0) {
@@ -187,7 +211,7 @@ const convertFunscript = (script, options, onProgress) => {
 
     //Split the source actions up into groups, separating two groups if 5x the last interval passes without any actions
     const actionGroups = getActionGroups(script.actions.sort((a, b) => a.at - b.at));
-    const slowerGroups = actionGroups.map(group => getHalfSpeedGroup(group));
+    const slowerGroups = actionGroups.map(group => getHalfSpeedGroup(group, options));
 
     
     /*
