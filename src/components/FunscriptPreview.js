@@ -11,20 +11,27 @@ const FunscriptPreview = ({width, height, funscriptA, funscriptB, position, dura
         }
     }, [canvasRef])
 
-    const drawPath = useCallback(funscript => {
+    const drawPath = useCallback((funscript, onlyTimes) => {
         const scriptDuration = funscript.actions.slice(-1)[0].at;
         const min = Math.max(0, scriptDuration * position - duration * 0.5);
         const max = min + duration
 
-        const candidates = funscript.actions.filter(a => a.at > min && a.at < max);
         ctx.beginPath();
-        for(let i = 0; i < candidates.length; i++) {
-            const x = width * (candidates[i].at - min) / duration;
-            const y = height - (candidates[i].pos / 100) * height;
-            if(i === 0) ctx.moveTo(x, y);
-            else ctx.lineTo(x, y);
-        }
-        ctx.stroke();
+        let first = true;
+        funscript.actions
+            .filter(a => a.at > min && a.at < max)
+            .forEach(action => {
+                const x = width * (action.at - min) / duration;
+                const y = height - (action.pos / 100) * height;
+
+                if(first) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+
+                if(onlyTimes) ctx.fillRect(x - 1, 0, 2, height);
+
+                first = false;
+            })
+        if(!onlyTimes) ctx.stroke();
     }, [position, duration, ctx, width, height]);
 
     useEffect(() => {
@@ -36,11 +43,15 @@ const FunscriptPreview = ({width, height, funscriptA, funscriptB, position, dura
         ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, width, height);
         
+        ctx.lineWidth = 3;
+
         ctx.strokeStyle = "#FFF";
+        ctx.fillStyle = "rgba(255,255,255,0.1)"
         drawPath(funscriptA);
         
         ctx.strokeStyle = "#F66";
-        drawPath(funscriptB);
+        ctx.fillStyle = "rgba(255,200,200,1)"
+        drawPath(funscriptB, false);
         
 
     }, [ctx, funscriptA, funscriptB, drawPath, position, width, height, duration])
