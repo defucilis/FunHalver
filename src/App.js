@@ -3,7 +3,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import ReactTooltip from 'react-tooltip'
 
 import {Dropzone} from './lib/FormUtils'
-import convertFunscript from './lib/funreducer'
+import {getHalfSpeedScript} from 'funscript-utils'
 import renderHeatmap from './lib/FunscriptHeatmap'
 import {getAverageIntensity} from './lib/FunscriptHeatmap'
 
@@ -61,7 +61,7 @@ const App = () => {
             setConvertedScriptMetadata({});
             return;
         }
-        const newConvertedScript = convertFunscript(originalScript, options, message => console.log(message));
+        const newConvertedScript = getHalfSpeedScript(originalScript, options);
         const newFilename = filename.replace(".funscript", "_HALVED.funscript");
         setConvertedScript(newConvertedScript);
         setPreparedFile({
