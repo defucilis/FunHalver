@@ -22,6 +22,8 @@ const App = () => {
     const [options, setOptions] = useState({
         resetAfterPause: false,
         removeShortPauses: false,
+        matchFirstDownstroke: false,
+        debugMode: true,
     })
     const [previewDuration, setPreviewDuration] = useState(10000);
     const [previewTarget, setPreviewTarget] = useState({
@@ -172,13 +174,31 @@ const App = () => {
                         <div>
                             <div>
                                 <label htmlFor="resetAfterPause">Reset After Pause</label>
-                                <Checkbox className={style.checkbox} checked={options.resetAfterPause} onChange={e => setOptions({...options, resetAfterPause: e.target.checked})}>
+                                <Checkbox 
+                                    className={style.checkbox} 
+                                    checked={options.resetAfterPause} 
+                                    onChange={e => setOptions({...options, resetAfterPause: e.target.checked})}
+                                >
                                     <p>✔</p>
                                 </Checkbox>
                             </div>
                             <div>
                                 <label htmlFor="removeShortPauses">Remove Short Pauses</label>
-                                <Checkbox className={style.checkbox} checked={options.removeShortPauses} onChange={e => setOptions({...options, removeShortPauses: e.target.checked})}>
+                                <Checkbox 
+                                    className={style.checkbox} 
+                                    checked={options.removeShortPauses} 
+                                    onChange={e => setOptions({...options, removeShortPauses: e.target.checked})}
+                                >
+                                    <p>✔</p>
+                                </Checkbox>
+                            </div>
+                            <div>
+                                <label htmlFor="matchFirstDownstroke">Match First Downstroke</label>
+                                <Checkbox 
+                                    className={style.checkbox} 
+                                    checked={options.matchFirstDownstroke} 
+                                    onChange={e => setOptions({...options, matchFirstDownstroke: e.target.checked})}
+                                >
                                     <p>✔</p>
                                 </Checkbox>
                             </div>

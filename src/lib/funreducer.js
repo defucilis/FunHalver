@@ -91,6 +91,10 @@ const getHalfSpeedGroup = (actionGroup, options) => {
             return;
         }
 
+        if(options.matchFirstDownstroke && i === 1 && action.pos < lastAction.pos) {
+            apexCount = 1;
+        }
+
         //apex actions - add every second one (reset when at a pause)
         if(Math.sign(action.pos - lastAction.pos) !== Math.sign(nextAction.pos - action.pos)) {
             if(apexCount === 0) {
@@ -111,21 +115,37 @@ const getHalfSpeedGroup = (actionGroup, options) => {
     const finalActions = [];
     keyActions.forEach((action, i) => {
         if(i === 0) {
-            finalActions.push({at: action.at, pos});
+            let outputAction = {at: action.at, pos};
+            if(options.debugMode) {
+                outputAction.type = action.type;
+                if(action.subActions && action.subActions.length > 0) outputAction.subActions = action.subActions;
+            }
+            finalActions.push(outputAction);
             return;
         }
 
         const lastAction = keyActions[i-1];
 
+        let outputAction = {};
         if(action.type === "pause") {
-            finalActions.push({at: action.at, pos});
+            outputAction.at = action.at;
+            outputAction.pos = action.pos;
         } else {
             const max = Math.max(...[...(lastAction.subActions.map(a => a.pos)), action.pos]);
             const min = Math.min(...[...(lastAction.subActions.map(a => a.pos)), action.pos]);
             const newPos = Math.abs(pos - min) > Math.abs(pos - max) ? min : max;
-            finalActions.push({at: action.at, pos: newPos});
+
+            outputAction.at = action.at;
+            outputAction.pos = newPos;
+
             pos = newPos;
         }
+
+        if(options.debugMode) {
+            outputAction.type = action.type;
+            if(action.subActions && action.subActions.length > 0) outputAction.subActions = action.subActions;
+        }
+        finalActions.push(outputAction);
     });
     return finalActions;
 }
@@ -210,8 +230,15 @@ const convertFunscript = (script, options, onProgress) => {
     output.actions = [];
 
     //Split the source actions up into groups, separating two groups if 5x the last interval passes without any actions
-    const actionGroups = getActionGroups(script.actions.sort((a, b) => a.at - b.at));
+    const orderedActions = script.actions.sort((a, b) => a.at - b.at);
+    //Note that IF the first two actions are separated by more than five seconds, we manually add the first one and use the algorithm on the second onwards
+    const longFirstWait = (orderedActions[1].at - orderedActions[0].at) > 5000;
+    if(longFirstWait) output.actions.push(orderedActions[0]);
+    const actionGroups = longFirstWait 
+        ? getActionGroups(orderedActions.slice(1))
+        : getActionGroups(orderedActions);
     const slowerGroups = actionGroups.map(group => getHalfSpeedGroup(group, options));
+    console.log(slowerGroups[0])
 
     
     /*
