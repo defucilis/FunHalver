@@ -147,6 +147,24 @@ const getHalfSpeedGroup = (actionGroup, options) => {
         }
         finalActions.push(outputAction);
     });
+
+    if(options.matchGroupEndPosition) {
+        if(finalActions.slice(-1)[0].pos !== actionGroup.slice(-1)[0].pos) {
+            const finalActionDuration = finalActions.slice(-1)[0].at - finalActions.slice(-2)[0].at;
+            const outputAction = {};
+            outputAction.pos = actionGroup.slice(-1)[0].pos;
+            outputAction.at = finalActions.slice(-1)[0].at + finalActionDuration;
+
+            if(options.debugMode) {
+                finalActions.slice(-1)[0].type = "apex";
+
+                outputAction.subActions = {};
+                outputAction.type = "last";
+            }
+            finalActions.push(outputAction);
+        }
+    }
+
     return finalActions;
 }
 

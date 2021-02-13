@@ -23,8 +23,9 @@ const App = () => {
     const [preparedFile, setPreparedFile] = useState(null);
     const [options, setOptions] = useState({
         resetAfterPause: false,
-        removeShortPauses: false,
+        removeShortPauses: true,
         matchFirstDownstroke: false,
+        matchGroupEndPosition: true,
         debugMode: true,
     })
     const [previewDuration, setPreviewDuration] = useState(10000);
@@ -215,6 +216,20 @@ const App = () => {
                             </div>
                             <ReactTooltip id="matchFirstDownstrokeTip" type="dark" effect="solid">
                                 <span className={style.tooltip}>Will guarantee that the first movement will not be half-speed if it's going down - ensures that Cock-Hero and PMV style scripts don't end up half a beat out of sync</span>
+                            </ReactTooltip>
+                            <div>
+                                <label htmlFor="matchGroupEndPosition">Match Group End Position</label>
+                                <Checkbox 
+                                    className={style.checkbox} 
+                                    checked={options.matchGroupEndPosition} 
+                                    onChange={e => setOptions({...options, matchGroupEndPosition: e.target.checked})}
+                                    data-tip data-for="matchGroupEndPositionTip"
+                                >
+                                    <p>✔</p>
+                                </Checkbox>
+                            </div>
+                            <ReactTooltip id="matchGroupEndPositionTip" type="dark" effect="solid">
+                                <span className={style.tooltip}>Makes sure that the Handy spends any long pauses in the intended position of the original script</span>
                             </ReactTooltip>
                         </div>
                     </div>
