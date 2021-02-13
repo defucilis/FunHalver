@@ -1,6 +1,6 @@
 {
   "name": "funhalver",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "main": "public/electron.js",
   "homepage": "./",
   "author": "Defucilis",
@@ -13,7 +13,7 @@
     "@yaireo/tagify": "^3.22.0",
     "electron-is-dev": "^1.2.0",
     "electron-squirrel-startup": "^1.0.0",
-    "funscript-utils": "^0.1.2",
+    "funscript-utils": "^0.1.3",
     "import": "0.0.6",
     "react": "^17.0.1",
     "react-collapse": "^5.1.0",
