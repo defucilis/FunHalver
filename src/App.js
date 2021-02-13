@@ -1,5 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react'
 
+import ReactTooltip from 'react-tooltip'
+
 import {Dropzone} from './lib/FormUtils'
 import convertFunscript from './lib/funreducer'
 import renderHeatmap from './lib/FunscriptHeatmap'
@@ -178,30 +180,42 @@ const App = () => {
                                     className={style.checkbox} 
                                     checked={options.resetAfterPause} 
                                     onChange={e => setOptions({...options, resetAfterPause: e.target.checked})}
+                                    data-tip data-for="resetAfterPauseTip"
                                 >
                                     <p>✔</p>
                                 </Checkbox>
                             </div>
+                            <ReactTooltip id="resetAfterPauseTip" type="dark" effect="solid">
+                                <span className={style.tooltip}>Will guarantee that the first action after a pause will be skipped</span>
+                            </ReactTooltip>
                             <div>
                                 <label htmlFor="removeShortPauses">Remove Short Pauses</label>
                                 <Checkbox 
                                     className={style.checkbox} 
                                     checked={options.removeShortPauses} 
                                     onChange={e => setOptions({...options, removeShortPauses: e.target.checked})}
+                                    data-tip data-for="removeShortPausesTip"
                                 >
                                     <p>✔</p>
                                 </Checkbox>
                             </div>
+                            <ReactTooltip id="removeShortPausesTip" type="dark" effect="solid">
+                                <span className={style.tooltip}>Removes very small pauses between actions, preventing them from messing up half-speed operation</span>
+                            </ReactTooltip>
                             <div>
                                 <label htmlFor="matchFirstDownstroke">Match First Downstroke</label>
                                 <Checkbox 
                                     className={style.checkbox} 
                                     checked={options.matchFirstDownstroke} 
                                     onChange={e => setOptions({...options, matchFirstDownstroke: e.target.checked})}
+                                    data-tip data-for="matchFirstDownstrokeTip"
                                 >
                                     <p>✔</p>
                                 </Checkbox>
                             </div>
+                            <ReactTooltip id="matchFirstDownstrokeTip" type="dark" effect="solid">
+                                <span className={style.tooltip}>Will guarantee that the first movement will not be half-speed if it's going down - ensures that Cock-Hero and PMV style scripts don't end up half a beat out of sync</span>
+                            </ReactTooltip>
                         </div>
                     </div>
                 )}
